@@ -7,6 +7,7 @@ const gridResults = document.querySelector('#grid-results-container');
 const singleRecipe = document.querySelector('#single-recipe');
 
 btnSearch.addEventListener('click', showResults);
+btnRandom.addEventListener('click', showRandomMeal);
 
 function showResults() {
   let input = searchInput.value;
@@ -39,6 +40,35 @@ function showResults() {
   } else {
     divResults.innerHTML = `<p>Please type something to search!</p>`;
   }
+}
+
+function showRandomMeal(e) {
+  e.preventDefault();
+
+  gridResults.innerHTML = '';
+  singleRecipe.innerHTML = '';
+
+  fetch(`https://www.themealdb.com/api/json/v1/1/random.php`)
+    .then((res) => res.json())
+    .then((data) => {
+      let meal = data.meals[0];
+      console.log(meal);
+
+      singleRecipe.innerHTML = `
+      
+      <h2>${meal.strMeal}</h2>
+      <img src="${meal.strMealThumb}" alt="${meal.strMealThumb}" />
+      <p>
+        ${meal.strInstructions}
+      </p>
+      <br>
+      <h3>Ingredients</h3>
+      <div class = 'ingredients-container'>
+        ${displayIngredients(meal)}
+        </div>`;
+
+      displayIngredients(meal);
+    });
 }
 
 gridResults.addEventListener('click', (e) => {
